@@ -12,7 +12,7 @@ router.get ('/', (req, res) => {
 
 router.get ('/:_id', (req, res) => {
 
-  UsuarioModel.getUsuario (req.body._id, (response) => {
+  UsuarioModel.getUsuario (req.params._id, (response) => {
 
     res.send (response[0]);
   })
