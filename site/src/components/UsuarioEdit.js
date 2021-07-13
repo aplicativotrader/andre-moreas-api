@@ -10,6 +10,7 @@ import Spinner from '../components/Spinner';
 export default function Usuario ({}) {
 
   let { _id } = useParams();
+
   const formRef = useRef(null);
 
   const [cls, setCls] = useState ('');
@@ -27,7 +28,7 @@ export default function Usuario ({}) {
   useEffect (() => {
 
     HttpClient.getUsuarios (_id, function (resp) {
-
+      
       setUser (resp);
       let tipo = resp.tipo;
       if (tipo == 'adm') tipo = 'admin'

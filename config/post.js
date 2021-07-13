@@ -284,7 +284,9 @@ async function getCall (_id, callback) {
     await mongoCliente.connect();
     const collection = mongoCliente.db(process.env.DB_NAME).collection("post");
 
-    let arquivos = await collection.find (query).toArray ();
+    let arquivos = await collection.find (query)
+                                    .sort ({"empresa.nome": 1, "empresa.sigla": 1})
+                                  .toArray ();
 
     callback (arquivos);
   }

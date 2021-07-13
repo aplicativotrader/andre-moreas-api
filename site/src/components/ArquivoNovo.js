@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 
 import { Form } from '@unform/web';
 import Input from '../misc/Input';
-
+import Radio from "../misc/Radio";
 import {useState, useRef} from 'react';
 import HttpClient from '../httpClient/HttpClient.js';
 
@@ -26,6 +26,8 @@ export default function ArquivoNovo ({}) {
 	const [isFilePicked, setIsFilePicked] = useState(false);
   // -- //
 
+  const [pushFields, setPushFields] = useState ('');
+
   let loader = '';
 
   function handleSubmit(data) {
@@ -38,6 +40,20 @@ export default function ArquivoNovo ({}) {
       return false;
     }
 
+    if (data.isPush == 'S') {
+      if (data.title == '' || data.body == '') {
+        setCls ('alert alert-danger');
+        setMessage ('Preencha os campos de push!');
+
+        return ;
+      }
+
+      data.push = {
+        title: data.title,
+        body: data.body
+      }
+    }
+    
     //le dados da imagem
     FileHelper.readFileData (selectedFile, (fileData) => {
 
@@ -74,6 +90,26 @@ export default function ArquivoNovo ({}) {
     loader = <Spinner title={'Registrando post de arquivo'} subtitle={'Aguerde enquanto processamos sua solicitação'}/>
   }
 
+  function changePushStatus () {
+
+    if (formRef.current.getFieldValue ('isPush') == 'S') {
+
+      let fields = <div class='col-12'>
+                    Título Push
+                    <Input type='text' name='title' class='form-control' />
+                    <br/>
+                    Texto Push
+                    <Input type='text' name='body' class='form-control' />
+                    <br/>
+                  </div>
+
+      setPushFields (fields)
+    }
+    else {
+      setPushFields ('');
+    }
+  }
+
   return (
     <div className="App">
 
@@ -99,6 +135,16 @@ export default function ArquivoNovo ({}) {
               <small> PDF, Excel </small>
               <input type='file' name='arquivo' accept='application/pdf, .xls, .xlsx' class='form-control' onChange={changeHandler}/>
               <br />
+
+              Push
+              <Radio
+                name="isPush"
+                options={[{ id: 'S', label: "Sim" }, { id: 'N', label: "Não" }]}
+                onClick={changePushStatus}
+                defaultChecked='N'
+              />
+              <br/>
+              {pushFields}
 
               <div class='col-12 text-right'>
                 <button type='submit' class='btn btn-success'> Registrar </button>

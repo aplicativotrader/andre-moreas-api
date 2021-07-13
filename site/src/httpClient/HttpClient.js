@@ -1,6 +1,7 @@
 import env from "react-dotenv";
 
 let api = "http://localhost:3000/";
+//let api = 'https://andremoraes-na-bolsa.herokuapp.com/'
 
 function getEstrategia (estrategiaId, callback) {
 

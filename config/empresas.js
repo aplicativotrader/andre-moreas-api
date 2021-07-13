@@ -35,14 +35,32 @@ async function insertEmpresa (nome, sigla, logo, callback) {
     await mongoCliente.connect();
     const collection = mongoCliente.db(process.env.DB_NAME).collection("empresas");
 
-    let doc = {
-      nome: nome,
-      sigla: sigla,
-      logo: logo
-    };
+    collection.findOne ({sigla: sigla}, (err, result) => {
 
-    let status = await collection.insertOne (doc);
-    callback(status);
+      if (err) throw err
+
+      if (result == null) {
+
+        let doc = {
+          nome: nome,
+          sigla: sigla,
+          logo: logo
+        };
+
+        let status = collection.insertOne (doc);
+        callback({status: 'ok'});
+        return;
+      }
+      else {
+
+        callback ({
+          status: 'error',
+          message: 'A sigla informada já foi registrada'
+        })
+        return;
+      }
+    })
+
   }
   catch (e) {
     console.log (e);

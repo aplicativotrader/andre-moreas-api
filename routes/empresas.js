@@ -61,12 +61,16 @@ router.post ('/create', function (req, res) {
 
     EmpresasModel.insertEmpresa (data.nome, data.sigla, fileName, (status) => {
 
-      if (status.result.ok == 1) {
+      if (status.status == 'ok') {
 
         res.json ({
           status: 'ok',
           message: 'Estratégia registrada com sucesso!'
         });
+      }
+      else if (status.status == 'error') {
+
+        res.send (status)
       }
       else {
 

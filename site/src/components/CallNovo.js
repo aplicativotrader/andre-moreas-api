@@ -141,6 +141,7 @@ export default function CallNovo ({}) {
               />
               <br />
 
+              Título 
               <Input type='text' name='titulo' class='form-control' />
               <br />
 

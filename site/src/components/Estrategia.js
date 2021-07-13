@@ -57,7 +57,7 @@ export default function Estrategia ({}) {
                   <h4> Estratégias </h4>
                 </div>
                 <div class='col-6 text-right'>
-                  <Link class='btn btn-primary' to='/post/video/novo'> Nova </Link>
+                  <Link class='btn btn-primary' to='/estrategia/nova'> Nova </Link>
                 </div>
               </div>
 

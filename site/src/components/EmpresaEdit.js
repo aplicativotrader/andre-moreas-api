@@ -114,6 +114,8 @@ export default function EstrategiaNova ({}) {
             <h2> Editar Empresa </h2>
             <div class={cls}> {message} </div>
 
+            <img src={HttpClient.api + 'images/' + empresa.logo} style={{width: 150, height: 'auto'}}/>
+
             <Form onSubmit={handleSubmit} ref={formRef}>
               <br />
               Nome

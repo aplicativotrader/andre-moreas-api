@@ -24,7 +24,7 @@ export default function CallEditar ({}) {
   const [pushFields, setPushFields] = useState ('');
   let loader = '';
 
-  const [call, setCall] = useState ([])
+  const [call, setCall] = useState (null)
   const [estrategias, setEstrategias] = useState ()
   const [sigla, setSigla] = useState ()
   let loading = '';
@@ -49,6 +49,7 @@ export default function CallEditar ({}) {
       formRef.current.setFieldValue('is_parcial', response.is_parcial);
       formRef.current.setFieldValue('is_final', response.is_final);
       formRef.current.setFieldValue('status', response.status);
+      formRef.current.setFieldValue('estrategia', response.estrategia)
 
       HttpClient.getEstrategia (null, (response2) => {
 
@@ -70,6 +71,18 @@ export default function CallEditar ({}) {
     })
 
   }, [isLoading]);
+
+  let EstrComponent = ''
+  if (call != null) {
+    EstrComponent = <Select
+                      name='estrategia'
+                      defaultValue={{
+                        value: call == null ? '' : call.estrategia,
+                        label: call == null ? 'Carregando...' : call.estrategia
+                      }}
+                      options={estrategias}
+                    />
+    }
 
   function handleSubmit(data) {
 
@@ -169,6 +182,7 @@ export default function CallEditar ({}) {
 
               <br />
 
+              Título
               <Input type='text' name='titulo' class='form-control' />
               <br />
 
@@ -225,14 +239,7 @@ export default function CallEditar ({}) {
               <br />
 
               Estratégia
-              <Select
-                name='estrategia'
-                defaultValue={{
-                  value: call.estrategia,
-                  label: call.estrategia
-                }}
-                options={estrategias}
-              />
+              {EstrComponent}
               <br />
 
               Push?

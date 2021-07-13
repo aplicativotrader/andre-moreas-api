@@ -9,7 +9,7 @@ async function getUsuario (_id, callback) {
     let query = {}
 
     if (_id != null) {
-
+      
       query = {
         _id: new mongo.ObjectID (_id)
       }
@@ -285,7 +285,7 @@ async function getAcessosMensais (mes, ano, callback) {
                                             {date: {$gte: ini}},
                                             {date: {$lte: fim}}
                                           ]
-                                        }).toArray ()      
+                                        }).toArray ()
 
     callback (acessos)
   }

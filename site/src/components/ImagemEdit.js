@@ -30,7 +30,7 @@ export default function ImagemEdit ({}) {
 	const [isFilePicked, setIsFilePicked] = useState(false);
   // -- //
 
-  let [post, setPost] = useState ([]);
+  let [post, setPost] = useState (undefined);
   let loader = '';
 
   useEffect (() => {
@@ -134,6 +134,22 @@ export default function ImagemEdit ({}) {
     }
   }
 
+  function RenderImages ({post}) {
+
+    if (post != undefined) {
+
+      let f = post.imagem.map ((image, key) => {
+
+        return (
+          <img src={HttpClient.api + 'images/' + image} style={{width: 150, heigh: 'auto', padding: 10}}/>
+        )
+      })
+
+      return f
+    }
+    return ''
+  }
+
   return (
     <div className="App">
 
@@ -145,6 +161,8 @@ export default function ImagemEdit ({}) {
 
             <h2> Post/Imagem - Editar </h2>
             <div class={cls}> {message} </div>
+
+            <RenderImages post={post} />
 
             <Form onSubmit={handleSubmit} ref={formRef}>
               <br />
