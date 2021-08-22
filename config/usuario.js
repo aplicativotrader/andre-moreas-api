@@ -9,7 +9,7 @@ async function getUsuario (_id, callback) {
     let query = {}
 
     if (_id != null) {
-      
+
       query = {
         _id: new mongo.ObjectID (_id)
       }
@@ -257,12 +257,25 @@ async function acessoMensal (email) {
     let date = new Date ()
     date = new Date(date.toDateString())
 
-    let acesso = await collection.findOne ({email: email, date: date}, (err, result) => {
+    let ano = date.getFullYear ()
+    let mes = date.getMonth () +1
+    mes = mes > 10 ? mes : '0' + mes
 
-      if (result == null) {
-        collection.insertOne ({email: email, date: date})
-      }
-    })
+    let ini = new Date (ano + '-' + mes + '-01')
+    let fim = new Date (ano + '-' + mes + '-31')
+
+    let acessos = await collection.findOne ({
+                                              $and: [
+                                                {date: {$gte: ini}},
+                                                {date: {$lte: fim}}
+                                              ]
+                                            }, (err, result) => {
+
+                                            if (result == null) {
+                                              console.log ('atualizando acesso')
+                                              collection.insertOne ({email: email, date: date})
+                                            }
+                                          })
   }
   finally {}
 }

@@ -73,7 +73,7 @@ async function sendPush (title, body, callback) {
     for (let pushToken of response) {
       pushList.push (pushToken.token);
     }
-
+    console.log (pushList)
     for (let pushToken of pushList) {
       console.log (pushToken)
       // Check that all your push tokens appear to be valid Expo push tokens

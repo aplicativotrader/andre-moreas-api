@@ -18,7 +18,7 @@ async function getEmpresas (_id, callback) {
     await mongoCliente.connect();
     const collection = mongoCliente.db(process.env.DB_NAME).collection("empresas");
 
-    let list = await collection.find (query).toArray ();
+    let list = await collection.find (query).sort ({"sigla": 1}).toArray ();
 
     callback (list);
 

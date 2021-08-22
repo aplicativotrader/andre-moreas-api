@@ -70,7 +70,9 @@ async function getVideos (_id, callback) {
     await mongoCliente.connect();
     const collection = mongoCliente.db(process.env.DB_NAME).collection("post");
 
-    let videos = await collection.find (query).toArray ();
+    let videos = await collection.find (query)
+                                  .sort ({changed: -1, created: -1})
+                                .toArray ();
 
     callback (videos);
   }
@@ -143,7 +145,9 @@ async function getImagem (_id, callback) {
     await mongoCliente.connect();
     const collection = mongoCliente.db(process.env.DB_NAME).collection("post");
 
-    let videos = await collection.find (query).toArray ();
+    let videos = await collection.find (query)
+                                  .sort ({changed: -1, created: -1})
+                                .toArray ();
 
     callback (videos);
   }
@@ -218,7 +222,9 @@ async function getArquivo (_id, callback) {
     await mongoCliente.connect();
     const collection = mongoCliente.db(process.env.DB_NAME).collection("post");
 
-    let arquivos = await collection.find (query).toArray ();
+    let arquivos = await collection.find (query)
+                                    .sort ({changed: -1, created: -1})
+                                  .toArray ();
 
     callback (arquivos);
   }
@@ -285,7 +291,8 @@ async function getCall (_id, callback) {
     const collection = mongoCliente.db(process.env.DB_NAME).collection("post");
 
     let arquivos = await collection.find (query)
-                                    .sort ({"empresa.nome": 1, "empresa.sigla": 1})
+                                    //.sort ({"empresa.nome": 1, "empresa.sigla": 1})
+                                    .sort ({changed: -1, created: -1})
                                   .toArray ();
 
     callback (arquivos);
