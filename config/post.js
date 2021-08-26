@@ -37,6 +37,7 @@ async function getPosts (page, filtro, callback) {
       let posts = await collection.find({$or: [{type: 'imagem'}, {type: 'arquivo'}]})
                                 .limit (limit)
                                 .skip (skipIndex)
+                                .sort ({changed: -1, created: -1})
                               .toArray ();
 
       callback (posts);
@@ -57,9 +58,11 @@ async function getPosts (page, filtro, callback) {
 }
 
 // videos
-async function getVideos (_id, callback) {
+async function getVideos (_id, page, callback) {
 
   let query = {type: 'video'};
+  const limit = 50;
+  const skipIndex = (page - 1) * limit;
 
   if (_id != null && _id != undefined) {
     query._id = new mongo.ObjectID(_id)
@@ -71,6 +74,8 @@ async function getVideos (_id, callback) {
     const collection = mongoCliente.db(process.env.DB_NAME).collection("post");
 
     let videos = await collection.find (query)
+                                  .limit (limit)
+                                  .skip (skipIndex)
                                   .sort ({changed: -1, created: -1})
                                 .toArray ();
 
@@ -132,9 +137,11 @@ async function updateVideo (doc, callback) {
 
 // imagens
 
-async function getImagem (_id, callback) {
+async function getImagem (_id, page, callback) {
 
   let query = {type: 'imagem'};
+  const limit = 50;
+  const skipIndex = (page - 1) * limit;
 
   if (_id != null && _id != undefined) {
     query._id = new mongo.ObjectID(_id)
@@ -146,6 +153,8 @@ async function getImagem (_id, callback) {
     const collection = mongoCliente.db(process.env.DB_NAME).collection("post");
 
     let videos = await collection.find (query)
+                                  .limit (limit)
+                                  .skip (skipIndex)
                                   .sort ({changed: -1, created: -1})
                                 .toArray ();
 
@@ -209,9 +218,11 @@ async function updateImagem (_id, titulo, subtitulo, link, texto, imagem, callba
 }
 
 // arquivo
-async function getArquivo (_id, callback) {
+async function getArquivo (_id, page, callback) {
 
   let query = {type: 'arquivo'};
+  const limit = 50;
+  const skipIndex = (page - 1) * limit;
 
   if (_id != null && _id != undefined) {
     query._id = new mongo.ObjectID(_id)
@@ -223,6 +234,8 @@ async function getArquivo (_id, callback) {
     const collection = mongoCliente.db(process.env.DB_NAME).collection("post");
 
     let arquivos = await collection.find (query)
+                                    .limit (limit)
+                                    .skip (skipIndex)
                                     .sort ({changed: -1, created: -1})
                                   .toArray ();
 
@@ -277,13 +290,16 @@ async function updateArquivo (doc, callback) {
 }
 
 // call
-async function getCall (_id, callback) {
+async function getCall (_id, page, callback) {
 
   let query = {type: 'call'};
+  const limit = 50;
+  const skipIndex = (page - 1) * limit;
 
   if (_id != null && _id != undefined) {
     query._id = new mongo.ObjectID(_id)
   }
+
 
   try {
 
@@ -292,6 +308,8 @@ async function getCall (_id, callback) {
 
     let arquivos = await collection.find (query)
                                     //.sort ({"empresa.nome": 1, "empresa.sigla": 1})
+                                    .limit (limit)
+                                    .skip (skipIndex)
                                     .sort ({changed: -1, created: -1})
                                   .toArray ();
 
@@ -434,6 +452,26 @@ async function updateCall (doc, callback) {
   })
 }
 
+async function getNumPages (type, callback) {
+
+  await mongoCliente.connect();
+  const collection = mongoCliente.db(process.env.DB_NAME).collection("post");
+
+  let posts = await collection.find ({type: type}).toArray ();
+
+  callback (posts)
+}
+
+async function deletePost (_id, callback) {
+
+  await mongoCliente.connect();
+  const collection = mongoCliente.db(process.env.DB_NAME).collection("post");
+
+  collection.deleteOne ({_id: new mongo.ObjectID(_id)})
+
+  callback ('ok');
+}
+
 module.exports = {
   getVideos,
   addVideo,
@@ -447,5 +485,7 @@ module.exports = {
   getCall,
   addCall,
   getPosts,
-  updateCall
+  updateCall,
+  getNumPages,
+  deletePost
 }

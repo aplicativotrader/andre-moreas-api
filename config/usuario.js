@@ -2,11 +2,13 @@ require('dotenv').config();
 var mongoCliente = require ('../config/db');
 var mongo = require('mongodb');
 
-async function getUsuario (_id, callback) {
+async function getUsuario (_id, page, nome, callback) {
 
   try {
 
     let query = {}
+    const limit = 50;
+    const skipIndex = (page - 1) * limit;
 
     if (_id != null) {
 
@@ -14,10 +16,19 @@ async function getUsuario (_id, callback) {
         _id: new mongo.ObjectID (_id)
       }
     }
+
+    if (nome != 0) {
+      query.nome = {$regex: nome}
+    }
+    
     await mongoCliente.connect();
     const collection = mongoCliente.db(process.env.DB_NAME).collection("usuarios");
 
-    let usuarios = await collection.find (query).toArray ();
+    let usuarios = await collection.find (query)
+                                    .limit (limit)
+                                    .skip (skipIndex)
+                                    .sort ({"nome": 1})
+                                  .toArray ();
 
     callback (usuarios)
   }
@@ -305,6 +316,16 @@ async function getAcessosMensais (mes, ano, callback) {
   finally {}
 }
 
+async function getNumPages (callback) {
+
+  await mongoCliente.connect();
+  const collection = mongoCliente.db(process.env.DB_NAME).collection("usuarios");
+
+  let users = await collection.find ().toArray ();
+
+  callback (users)
+}
+
 module.exports = {
   addUsuario,
   getUsuario,
@@ -316,5 +337,6 @@ module.exports = {
   updateAcesso,
   getByEmail,
   acessoMensal,
-  getAcessosMensais
+  getAcessosMensais,
+  getNumPages
 }

@@ -2,9 +2,9 @@ var express = require('express');
 var router = express.Router();
 var UsuarioModel = require ('../config/usuario');
 
-router.get ('/', (req, res) => {
+router.get ('/get/:page/:nome', (req, res) => {
 
-  UsuarioModel.getUsuario (null, (response) => {
+  UsuarioModel.getUsuario (null, req.params.page, req.params.nome, (response) => {
 
     res.send (response);
   })
@@ -12,7 +12,7 @@ router.get ('/', (req, res) => {
 
 router.get ('/:_id', (req, res) => {
 
-  UsuarioModel.getUsuario (req.params._id, (response) => {
+  UsuarioModel.getUsuario (req.params._id, 1, (response) => {
 
     res.send (response[0]);
   })
@@ -178,6 +178,23 @@ router.get ('/get-acessos-mensais/:mes/:ano', (req, res) => {
 
   UsuarioModel.getAcessosMensais (req.params.mes, req.params.ano, response => {
     res.send (response)
+  })
+})
+
+router.get ('/pages/num-pages', (req, res) => {
+
+  UsuarioModel.getNumPages ((users) => {
+
+    let numUsu = users.length
+    let numPages = 0
+
+    if (numUsu > 0) {
+      numPages = Math.ceil (numUsu / 50)
+    }
+
+    res.json ({
+      numPages: numPages
+    });
   })
 })
 

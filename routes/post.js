@@ -6,7 +6,7 @@ var PushModel = require ('../config/push');
 const { v4: uuidv4 } = require('uuid');
 
 router.get('/fetch/:page/:filtros', function(req, res, next) {
-  
+
   PostModel.getPosts (req.params.page, JSON.parse (req.params.filtros), (response) => {
 
     res.send (response)
@@ -19,9 +19,9 @@ router.get('/get/:id', function(req, res, next) {
 });
 
 // vídeo
-router.get ('/video', function (req, res) {
+router.get ('/video/pages/:page', function (req, res) {
 
-  PostModel.getVideos (null, (videos) => {
+  PostModel.getVideos (null, req.params.page, (videos) => {
 
     res.send (videos);
   })
@@ -29,7 +29,7 @@ router.get ('/video', function (req, res) {
 
 router.get ('/video/:id', function (req, res) {
 
-  PostModel.getVideos (req.params.id, (video) => {
+  PostModel.getVideos (req.params.id, 1, (video) => {
 
     res.send (video[0]);
   })
@@ -132,10 +132,10 @@ router.put ('/video/update', function (req, res) {
   });
 })
 
-// vídeo
-router.get ('/imagem', function (req, res) {
+// imagem
+router.get ('/imagem/pages/:page', function (req, res) {
 
-  PostModel.getImagem (null, (imagems) => {
+  PostModel.getImagem (null, req.params.page, (imagems) => {
 
     res.send (imagems);
   })
@@ -143,7 +143,7 @@ router.get ('/imagem', function (req, res) {
 
 router.get ('/imagem/:id', function (req, res) {
 
-  PostModel.getImagem (req.params.id, (imagem) => {
+  PostModel.getImagem (req.params.id, 1, (imagem) => {
 
     res.send (imagem[0]);
   })
@@ -170,10 +170,13 @@ router.post ('/imagem/registry', (req, res) => {
     return;
   }
 
-  // cria imagens
-  let imageList = [];
 
-  if (data.hasOwnProperty ('imagem') && data.imagem != '') {
+  // salvo no storage
+
+  // cria imagens
+  //let imageList = [];
+
+  /*if (data.hasOwnProperty ('imagem') && data.imagem != '') {
     data.imagem.forEach (imagem => {
 
       var base64Data = imagem.replace("data:image/png;base64,", "");
@@ -187,9 +190,9 @@ router.post ('/imagem/registry', (req, res) => {
 
       imageList.push (fileName);
     })
-  }
+  }*/
 
-  PostModel.addImagem (data.titulo, data.sub_titulo, data.link, data.texto, imageList, (response) => {
+  PostModel.addImagem (data.titulo, data.sub_titulo, data.link, data.texto, data.imagem, (response) => {
 
     if (data.hasOwnProperty ('push')) {
 
@@ -223,8 +226,9 @@ router.put ('/imagem/update', (req, res) => {
     return;
   }
 
+  // passou a ser salvo no firestorage
   // cria imagens
-  let imageList = [];
+  /*let imageList = [];
 
   if (data.hasOwnProperty ('imagem') && data.imagem != '') {
     data.imagem.forEach (imagem => {
@@ -244,9 +248,9 @@ router.put ('/imagem/update', (req, res) => {
 
   if (Object.keys (imageList).length == 0) {
     imageList = null; // remove imagem do update, preservando as ja existentes.
-  }
+  }*/
 
-  PostModel.updateImagem (data._id, data.titulo, data.sub_titulo, data.link, data.texto, imageList, (response) => {
+  PostModel.updateImagem (data._id, data.titulo, data.sub_titulo, data.link, data.texto, data.imagem, (response) => {
 
     if (data.hasOwnProperty ('push')) {
 
@@ -262,16 +266,16 @@ router.put ('/imagem/update', (req, res) => {
 
 // arquivos
 
-router.get ('/arquivo', (req, res) => {
+router.get ('/arquivo/pages/:page', (req, res) => {
 
-  PostModel.getArquivo (null, (response) => {
+  PostModel.getArquivo (null, req.params.page, (response) => {
     res.send (response);
   })
 })
 
 router.get ('/arquivo/:_id', (req, res) => {
 
-  PostModel.getArquivo (req.params._id, (response) => {
+  PostModel.getArquivo (req.params._id, 1, (response) => {
     res.send (response[0]);
   })
 })
@@ -294,7 +298,11 @@ router.post ('/arquivo/registry', (req, res) => {
     return;
   }
 
-  var base64Data = data.arquivo.replace("data:application/pdf;base64,", "");
+  ///
+
+  // passou a ser salvo no fire storage
+
+  /*var base64Data = data.arquivo.replace("data:application/pdf;base64,", "");
   base64Data = base64Data.replace("data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,", "");
   base64Data = base64Data.replace("data:application/vnd.ms-excel;base64,", "");
 
@@ -304,6 +312,7 @@ router.post ('/arquivo/registry', (req, res) => {
   require("fs").writeFile( "public\/images\/" + fileName, imageBuffer, (err) => {})
 
   data.arquivo = fileName
+  */
   PostModel.addArquivo (data, (status) => {
 
     if (status.result.ok == 1) {
@@ -346,7 +355,10 @@ router.put ('/arquivo/update', (req, res) => {
     return;
   }
 
-  var base64Data = data.arquivo.replace("data:application/pdf;base64,", "");
+  //
+  // passou a ser salvo no fire storage
+
+  /*var base64Data = data.arquivo.replace("data:application/pdf;base64,", "");
   base64Data = base64Data.replace("data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,", "");
   base64Data = base64Data.replace("data:application/vnd.ms-excel;base64,", "");
 
@@ -355,7 +367,8 @@ router.put ('/arquivo/update', (req, res) => {
   let fileName = uuidv4() + '.' + data.ext;
   require("fs").writeFile( "public\/images\/" + fileName, imageBuffer, (err) => {})
 
-  data.arquivo = fileName
+  data.arquivo = fileName*/
+
   PostModel.updateArquivo (data, (status) => {
 
     if (status.result.ok == 1) {
@@ -380,16 +393,16 @@ router.put ('/arquivo/update', (req, res) => {
   })
 })
 
-router.get ('/call', (req, res) => {
+router.get ('/call/pages/:page', (req, res) => {
 
-  PostModel.getCall (null, (response) => {
+  PostModel.getCall (null, req.params.page, (response) => {
     res.send (response);
   })
 });
 
 router.get ('/call/:_id', (req, res) => {
 
-  PostModel.getCall (req.params._id, (response) => {
+  PostModel.getCall (req.params._id, 1, (response) => {
     res.send (response[0])
   })
 });
@@ -482,6 +495,30 @@ router.put ('/call/update', (req, res) => {
     message: 'Call atualizado com sucesso!'
   });
 
+})
+
+router.post ('/delete', (req, res) => {
+
+  PostModel.deletePost (req.body._id, () => {
+    res.send ({status: 'ok'});
+  });
+})
+
+router.get ('/num-pages/:type', (req, res) => {
+
+  PostModel.getNumPages (req.params.type, (posts) => {
+
+    let numPosts = posts.length
+    let numPages = 0
+
+    if (numPosts > 0) {
+      numPages = Math.ceil (numPosts / 50)
+    }
+
+    res.json ({
+      numPages: numPages
+    });
+  })
 })
 
 module.exports = router;
