@@ -75,14 +75,19 @@ async function updateEmpresa (_id, nome, sigla, logo, callback) {
     await mongoCliente.connect();
     const collection = mongoCliente.db(process.env.DB_NAME).collection("empresas");
 
+    let fields = {
+      nome: nome,
+      sigla: sigla
+    }
+
+    if (logo != '') {
+      query.logo = logo
+    }
+
     const ret = await collection.updateOne (
                                               {_id: new mongo.ObjectID(_id)},
                                               {
-                                                $set: {
-                                                  "nome": nome,
-                                                  "sigla": sigla,
-                                                  "logo": logo
-                                                }
+                                                $set: fields
                                               }
                                             );
 

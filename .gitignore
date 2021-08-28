@@ -99,3 +99,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+#ignora pasta de imagens
+Public/images/*

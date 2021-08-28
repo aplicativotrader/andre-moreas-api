@@ -10,9 +10,9 @@ router.get ('/get/:page/:nome', (req, res) => {
   })
 })
 
-router.get ('/:_id', (req, res) => {
+router.get ('/get-by-id/:_id', (req, res) => {
 
-  UsuarioModel.getUsuario (req.params._id, 1, (response) => {
+  UsuarioModel.getUsuario (req.params._id, 1, 0, (response) => {
 
     res.send (response[0]);
   })

@@ -40,7 +40,7 @@ router.post ('/create', function (req, res) {
   }
 
   // cria imagem
-  var base64Data = data.logo.replace("data:image/png;base64,", "");
+  //var base64Data = data.logo.replace("data:image/png;base64,", "");
   base64Data = base64Data.replace("data:image/jpg;base64,", "");
   base64Data = base64Data.replace("data:image/jpeg;base64,", "");
 
@@ -92,7 +92,6 @@ router.put ('/update', function (req, res) {
       (!data.hasOwnProperty ('_id') || data._id == '')
       || (!data.hasOwnProperty ('nome') || data.nome == '')
       || (!data.hasOwnProperty ('sigla') || data.sigla == '')
-      || (!data.hasOwnProperty('logo') || data.logo == '')
     ) {
 
       res.send ({
@@ -104,34 +103,37 @@ router.put ('/update', function (req, res) {
   }
 
     // cria imagem
-    var base64Data = data.logo.replace("data:image/png;base64,", "");
-    base64Data = base64Data.replace("data:image/jpg;base64,", "");
-    base64Data = base64Data.replace("data:image/jpeg;base64,", "");
+    let fileName = '';
 
-    let imageBuffer = new Buffer(base64Data, 'base64');
+    if (req.body.hasOwnProperty ('logo') && req.body.logo != undefined && req.body.logo != null) {
 
-    let fileName = uuidv4() + '.png';
+      var base64Data = data.logo.replace("data:image/png;base64,", "");
+      base64Data = base64Data.replace("data:image/jpg;base64,", "");
+      base64Data = base64Data.replace("data:image/jpeg;base64,", "");
 
-    require("fs").writeFile( "public\/images\/" + fileName, imageBuffer, function(err) {
+      let imageBuffer = new Buffer(base64Data, 'base64');
 
-      EmpresasModel.updateEmpresa (data._id, data.nome, data.sigla, fileName, (response) => {
+      fileName = uuidv4() + '.png';
+      require("fs").writeFile( "public\/images\/" + fileName, imageBuffer, function(err) {})
+    }
 
-        if (response.result.ok == 1) {
+    EmpresasModel.updateEmpresa (data._id, data.nome, data.sigla, fileName, (response) => {
 
-          res.json ({
-            status: 'ok',
-            message: 'Estratégia atualizada com sucesso!'
-          });
-        }
-        else {
+      if (response.result.ok == 1) {
 
-          res.json ({
-            status: 'error',
-            message: 'Erro ao salvar estratégia.'
-          });
-        }
-      })
-    });
+        res.json ({
+          status: 'ok',
+          message: 'Estratégia atualizada com sucesso!'
+        });
+      }
+      else {
+
+        res.json ({
+          status: 'error',
+          message: 'Erro ao salvar estratégia.'
+        });
+      }
+    })     
 })
 
 module.exports = router;

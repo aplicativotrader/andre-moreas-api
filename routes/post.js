@@ -344,7 +344,6 @@ router.put ('/arquivo/update', (req, res) => {
   if (
     (!data.hasOwnProperty ('titulo') || data.titulo == '')
     || (!data.hasOwnProperty ('subtitulo') || data.subtitulo == '')
-    || (!data.hasOwnProperty ('arquivo') || data.arquivo == '')
   ) {
 
     res.send ({
@@ -368,6 +367,11 @@ router.put ('/arquivo/update', (req, res) => {
   require("fs").writeFile( "public\/images\/" + fileName, imageBuffer, (err) => {})
 
   data.arquivo = fileName*/
+
+  // caso nao tenha arquivo enviado
+  if (data.arquivo == undefined) {
+    delete data['arquivo']
+  }
 
   PostModel.updateArquivo (data, (status) => {
 
@@ -400,7 +404,7 @@ router.get ('/call/pages/:page', (req, res) => {
   })
 });
 
-router.get ('/call/:_id', (req, res) => {
+router.get ('/call/get/:_id', (req, res) => {
 
   PostModel.getCall (req.params._id, 1, (response) => {
     res.send (response[0])
@@ -475,7 +479,7 @@ router.put ('/call/update', (req, res) => {
     || (!data.hasOwnProperty ('final') || data.final == '')
     || (!data.hasOwnProperty ('estrategia') || data.estrategia == '')
   ) {
-
+    console.log ("############################ LOGGGGGGG ###########################", data)
     res.send ({
       status: 'error',
       message: 'Todos os campos são obrigatórios.'

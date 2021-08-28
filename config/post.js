@@ -341,11 +341,11 @@ async function addCall (doc, callback) {
 
 async function updateCall (doc, callback) {
 
-  getCall (doc._id, (call) => {
+  getCall (doc._id, 1, (call) => {
 
     let updates = [];
     let date = new Date ();
-
+    
     call = call[0]
 
     if (call.hasOwnProperty ('update')) {

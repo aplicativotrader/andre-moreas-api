@@ -3,7 +3,7 @@ var mongoCliente = require ('../config/db');
 var mongo = require('mongodb');
 
 async function getUsuario (_id, page, nome, callback) {
-
+  console.log (_id, page, nome)
   try {
 
     let query = {}
@@ -18,9 +18,9 @@ async function getUsuario (_id, page, nome, callback) {
     }
 
     if (nome != 0) {
-      query.nome = {$regex: nome}
+      query.nome = {$regex: new RegExp(nome, 'i') }
     }
-    
+    console.log (query)
     await mongoCliente.connect();
     const collection = mongoCliente.db(process.env.DB_NAME).collection("usuarios");
 
