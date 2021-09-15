@@ -372,7 +372,7 @@ router.put ('/arquivo/update', (req, res) => {
   if (data.arquivo == undefined) {
     delete data['arquivo']
   }
-
+  
   PostModel.updateArquivo (data, (status) => {
 
     if (status.result.ok == 1) {

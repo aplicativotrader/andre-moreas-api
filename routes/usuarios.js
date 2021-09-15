@@ -2,9 +2,9 @@ var express = require('express');
 var router = express.Router();
 var UsuarioModel = require ('../config/usuario');
 
-router.get ('/get/:page/:nome', (req, res) => {
+router.get ('/get/:page/:nome/:email', (req, res) => {
 
-  UsuarioModel.getUsuario (null, req.params.page, req.params.nome, (response) => {
+  UsuarioModel.getUsuario (null, req.params.page, req.params.nome, req.params.email, (response) => {
 
     res.send (response);
   })
@@ -12,7 +12,7 @@ router.get ('/get/:page/:nome', (req, res) => {
 
 router.get ('/get-by-id/:_id', (req, res) => {
 
-  UsuarioModel.getUsuario (req.params._id, 1, 0, (response) => {
+  UsuarioModel.getUsuario (req.params._id, 1, 0, 0, (response) => {
 
     res.send (response[0]);
   })
@@ -44,6 +44,7 @@ router.put ('/update/:_id', (req, res) => {
     (!data.hasOwnProperty ('email') || data.email == '')
     || (!data.hasOwnProperty ('tipo') || data.tipo == '')
     || (!data.hasOwnProperty ('status') || data.status == '')
+    || (!data.hasOwnProperty ('nome') || data.nome == '')
     ) {
 
 
@@ -55,7 +56,7 @@ router.put ('/update/:_id', (req, res) => {
     return ;
   }
 
-  UsuarioModel.updateUsuario (req.params._id, data.email, data.status, data.tipo, (response) => {
+  UsuarioModel.updateUsuario (req.params._id, data.email, data.status, data.tipo, data.nome, (response) => {
 
     res.send (response)
   })
@@ -181,9 +182,19 @@ router.get ('/get-acessos-mensais/:mes/:ano', (req, res) => {
   })
 })
 
-router.get ('/pages/num-pages', (req, res) => {
+router.get ('/pages/num-pages/:nome/:email', (req, res) => {
 
-  UsuarioModel.getNumPages ((users) => {
+  let filters = {}
+
+  if (req.params.nome != 0) {
+    filters.nome = {$regex: new RegExp(req.params.nome, 'i') }
+  }
+
+  if (req.params.email != 0) {
+    filters.email = {$regex: new RegExp(req.params.email, 'i') }
+  }
+
+  UsuarioModel.getNumPages (filters, (users) => {
 
     let numUsu = users.length
     let numPages = 0

@@ -2,7 +2,7 @@ require('dotenv').config();
 var mongoCliente = require ('../config/db');
 var mongo = require('mongodb');
 
-async function getUsuario (_id, page, nome, callback) {
+async function getUsuario (_id, page, nome, email, callback) {
   console.log (_id, page, nome)
   try {
 
@@ -20,6 +20,11 @@ async function getUsuario (_id, page, nome, callback) {
     if (nome != 0) {
       query.nome = {$regex: new RegExp(nome, 'i') }
     }
+
+    if (email != 0) {
+      query.email = {$regex: new RegExp(email, 'i') }
+    }
+
     console.log (query)
     await mongoCliente.connect();
     const collection = mongoCliente.db(process.env.DB_NAME).collection("usuarios");
@@ -77,14 +82,14 @@ async function addUsuario (email, callback) {
   finally {}
 }
 
-async function updateUsuario (_id, email, status, tipo, callback) {
+async function updateUsuario (_id, email, status, tipo, nome, callback) {
 
   try {
 
     await mongoCliente.connect();
     const collection = mongoCliente.db(process.env.DB_NAME).collection("usuarios");
-
-    collection.updateOne ({_id: new mongo.ObjectID (_id)}, {$set: {email: email, status: status, tipo: tipo}});
+    console.log (nome)
+    collection.updateOne ({_id: new mongo.ObjectID (_id)}, {$set: {email: email, status: status, tipo: tipo, nome: nome}});
     callback ({
       status: 'ok',
       message: 'Usuário atualizado'
@@ -316,12 +321,12 @@ async function getAcessosMensais (mes, ano, callback) {
   finally {}
 }
 
-async function getNumPages (callback) {
+async function getNumPages (filter, callback) {
 
   await mongoCliente.connect();
   const collection = mongoCliente.db(process.env.DB_NAME).collection("usuarios");
 
-  let users = await collection.find ().toArray ();
+  let users = await collection.find (filter).toArray ();
 
   callback (users)
 }

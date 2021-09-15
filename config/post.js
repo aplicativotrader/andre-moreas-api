@@ -283,7 +283,7 @@ async function updateArquivo (doc, callback) {
                                                 $set: doc
                                               }
                                             );
-
+    
     callback (status);
   }
   finally {}
@@ -345,7 +345,7 @@ async function updateCall (doc, callback) {
 
     let updates = [];
     let date = new Date ();
-    
+
     call = call[0]
 
     if (call.hasOwnProperty ('update')) {
