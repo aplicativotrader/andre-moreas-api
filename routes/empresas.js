@@ -40,7 +40,7 @@ router.post ('/create', function (req, res) {
   }
 
   // cria imagem
-  //var base64Data = data.logo.replace("data:image/png;base64,", "");
+  var base64Data = data.logo.replace("data:image/png;base64,", "");
   base64Data = base64Data.replace("data:image/jpg;base64,", "");
   base64Data = base64Data.replace("data:image/jpeg;base64,", "");
 
@@ -133,7 +133,7 @@ router.put ('/update', function (req, res) {
           message: 'Erro ao salvar estratégia.'
         });
       }
-    })     
+    })
 })
 
 module.exports = router;
