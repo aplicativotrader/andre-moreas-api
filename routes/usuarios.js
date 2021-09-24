@@ -76,10 +76,7 @@ router.post ('/create-lote', (req, res) => {
     return;
   }
 
-  mailList.forEach((email => {
-
-    UsuarioModel.addUsuario (email, (response) => {})
-  }));
+  UsuarioModel.addLote (mailList);
 
   res.send ({
     status: 'ok'
@@ -100,10 +97,7 @@ router.delete ('/remove-lote', (req, res) => {
     return;
   }
 
-  mailList.forEach((email => {
-
-    UsuarioModel.rmUsuario (email, (response) => {})
-  }));
+  UsuarioModel.rmLote (mailList)
 
   res.send ({
     status: 'ok'

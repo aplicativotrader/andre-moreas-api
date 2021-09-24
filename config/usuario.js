@@ -331,6 +331,22 @@ async function getNumPages (filter, callback) {
   callback (users)
 }
 
+async function addLote (mailList) {
+
+  mailList.forEach((email => {
+
+    addUsuario (email, (response) => {})
+  }));
+}
+
+async function rmLote (mailList) {
+
+  mailList.forEach((email => {
+
+    rmUsuario (email, (response) => {})
+  }));
+}
+
 module.exports = {
   addUsuario,
   getUsuario,
@@ -343,5 +359,7 @@ module.exports = {
   getByEmail,
   acessoMensal,
   getAcessosMensais,
-  getNumPages
+  getNumPages,
+  addLote,
+  rmLote
 }

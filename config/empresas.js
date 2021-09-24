@@ -81,7 +81,7 @@ async function updateEmpresa (_id, nome, sigla, logo, callback) {
     }
 
     if (logo != '') {
-      query.logo = logo
+      fields.logo = logo
     }
 
     const ret = await collection.updateOne (
