@@ -102,3 +102,6 @@ dist
 
 #ignora pasta de imagens
 Public/images/*
+public/images/*
+public/images/
+public/
